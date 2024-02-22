@@ -18,6 +18,12 @@ parser.add_argument(
     '-g', '--gazebodir',
     default="$HOME/.gazebo/models",
     help='Gazebo models directory')
+
+parser.add_argument(
+    '-p', '--pixels',
+    default=170, type=int,
+    help='image pixel size')
+
 parser.add_argument(
     '-s', '--size',
     default=500, type=int,
@@ -39,6 +45,16 @@ args.gazebodir = os.path.expandvars(args.gazebodir)
 args.images_dir = os.path.expandvars(args.images_dir)
 script_path = os.path.dirname(os.path.realpath(__file__))
 model_dir = os.path.join(os.path.dirname(script_path), 'model')
+
+print('Script path: ' + script_path)
+print('model dir: ' + model_dir)
+if args.size > 0:
+    print(f'Param size:{args.size}')
+if args.white_contour_size_mm > 0:
+    print(f'Param white contour size: {args.white_contour_size_mm}')
+if args.pixels > 0:
+    print(f'Param pixel size: {args.pixels}')
+
 ORIGINAL_MARKER_SIZE_MM = 500
 ORIGINAL_IMAGE_SIZE_PX = 170
 white_contour_px = \
@@ -64,7 +80,7 @@ for image_file in file_list:
     if not image_file.endswith('.png'):
         continue
     image_file_path = os.path.join(args.images_dir, image_file)
-    filename_without_ext = image_file[0:image_file.rfind('.')]
+    filename_without_ext = image_file[0:image_file.rfind('.')]  #File name
     # ignore marker0 as it has already been copied above
     if not filename_without_ext.lower() == 'marker0':
         cmd = "cp -r " + os.path.join(args.gazebodir, "marker0") + \
